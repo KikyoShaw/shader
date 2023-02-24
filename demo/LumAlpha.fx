@@ -73,7 +73,6 @@ float4 main(float2 uv : TEXCOORD) : COLOR
   	return ColorProcessing(c, Hue, Saturation, Luminosity) ;
   	
   float alp = c.a;
-  
  	//float total = 1.0 - Pos;
   //float cur = uv.y - Pos;
   //c.a *=  1.0 - (cur / total);
@@ -88,12 +87,13 @@ float4 main(float2 uv : TEXCOORD) : COLOR
 	
 	float fade = 1.0 - Pos;
 	float v = smoothstep(0., fade, 1.0 - uv.y);
-	c.a *= v;
+	//c.a *= v;
 	
 	//float k = 3.14/(2 - 2*Pos);
 	//float b = 3.14/2 - k;
   //c.a *= cos(uv.y*k + b);
-	c.rgb *= c.a * alp;
+  
+	c.rgba *= v;
 	
  	return ColorProcessing(c, Hue, Saturation, Luminosity) ;
 }

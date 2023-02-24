@@ -24,6 +24,12 @@ float Luminosity : register(C2); // -1..1, default 0
 /// <defaultValue>1</defaultValue>
 float Alpha : register(C3); // -1..1, default 0
 
+/// <summary>UseAlpha.</summary>
+/// <minValue>0</minValue>
+/// <maxValue>1</maxValue>
+/// <defaultValue>0</defaultValue>
+float UseAlpha : register(C4);// 0..1, default 0
+
 static float3x3 matrixH =
 {
   0.8164966f,  0,           0.5352037f,
@@ -67,6 +73,9 @@ float4 ColorProcessing(float4 c, float h, float s, float l)
 float4 main(float2 uv : TEXCOORD) : COLOR
 {
   float4 c = tex2D(input1, uv);
-  c.a = (c.r + c.g + c.b) / 3.0 / Alpha;
+  
+  if(UseAlpha == 1)
+  	c.a = (c.r + c.g + c.b) / 3.0 / Alpha;
+
   return ColorProcessing(c, Hue, Saturation, Luminosity) ;
 }
