@@ -1,20 +1,24 @@
 //--------------------------------------------------------------------------------------
 // 
-// WPF ShaderEffect HLSL -- InvertColorEffect
+// WPF ShaderEffect HLSL -- PinchEffect
 //
 //--------------------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------------------
+// Shader constant register mappings (scalars - float, double, Point, Color, Point3D, etc.)
+//-----------------------------------------------------------------------------------------
+
+float CenterX : register(C0);
+float CenterY : register(C1);
+float Radius : register(C2);
+float Amount : register(C3);
 
 //--------------------------------------------------------------------------------------
 // Sampler Inputs (Brushes, including ImplicitInput)
 //--------------------------------------------------------------------------------------
 
-/// <summary>InvertVal.</summary>
-/// <minValue>0</minValue>
-/// <maxValue>1</maxValue>
-/// <defaultValue>1</defaultValue>
-float InvertVal : register(C1);// 0..1, default 1
-
 sampler2D implicitInputSampler : register(S0);
+
 
 //--------------------------------------------------------------------------------------
 // Pixel Shader
@@ -22,9 +26,10 @@ sampler2D implicitInputSampler : register(S0);
 
 float4 main(float2 uv : TEXCOORD) : COLOR
 {
-   float4 color = tex2D( implicitInputSampler, uv );
-   float4 inverted_color = InvertVal - color;
-   inverted_color.a = color.a;
-   inverted_color.rgb *= inverted_color.a;
-   return inverted_color;
+    float2 center = { CenterX, CenterY };
+    float2 displace = center - uv;
+    float range = saturate(1 - (length(displace) / (abs(-sin(Radius * 8) * Radius) + 0.00000001F)));
+    return tex2D(implicitInputSampler, uv + displace * range * Amount);
 }
+
+
