@@ -18,15 +18,10 @@ float Sigma : register(C1); // 0..10, default 5
 /// <defaultValue>1</defaultValue>
 float Temp : register(C1); // 0..1, default1
 
-float Gaussian(float x, float sigma)
-{
-    return exp(-(x * x) / (2 * sigma * sigma)) / sqrt(2 * 3.14 * sigma * sigma);
-}
-
-static float weights[9] = {
-        Gaussian(-1, Sigma), Gaussian(0, Sigma), Gaussian(1, Sigma),
-        Gaussian(-1, Sigma), Gaussian(0, Sigma), Gaussian(1, Sigma),
-        Gaussian(-1, Sigma), Gaussian(0, Sigma), Gaussian(1, Sigma)
+uniform float3x3 weights : register(c0) = {
+    0.1111, 0.1111, 0.1111,
+    0.1111, 0.1111, 0.1111,
+    0.1111, 0.1111, 0.1111
 };
 
 float4 main(float2 uv : TEXCOORD) : COLOR
